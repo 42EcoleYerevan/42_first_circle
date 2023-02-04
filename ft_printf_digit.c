@@ -28,6 +28,16 @@ int ft_printf_lenint(int n)
 
 int ft_printf_digit(int d)
 {
+	int out;
+	out = 0;
+	if (d == -2147483648)
+		return (write(1, "-2147483648", 11));
+	if (d < 0)
+	{
+		out += write(1, "-", 1);
+		d = -d;
+	}
 	ft_printf_putint(d);
-	return (ft_printf_lenint(d));
+	out += ft_printf_lenint(d);
+	return (out);
 }
