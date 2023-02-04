@@ -5,7 +5,10 @@ AR = ar r
 OBJS = ft_printf_char.o\
 	   ft_printf_str.o\
 	   ft_printf_digit.o\
-	   ft_printf_pointer.o
+	   ft_printf_pointer.o\
+	   ft_printf_unsigned.o\
+	   ft_printf_hex.o\
+	   ft_printf.o
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

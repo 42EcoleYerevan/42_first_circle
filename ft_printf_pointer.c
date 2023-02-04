@@ -31,11 +31,11 @@ int ft_printf_pointer(unsigned long long num)
 	int out;
 
 	out = 0;
-	out += write(1, "0x", 2);
 	if (num == 0)
-		out += ft_printf_char('0');
+		return (write(1, "(nil)", 5));
 	else
 	{
+		out += write(1, "0x", 2);
 		ft_putptr(num);
 		out += ft_lenptr(num);
 	}
