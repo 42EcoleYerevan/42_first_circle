@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 7
 
 char *ft_calloc(size_t count, size_t size)
 {
@@ -71,30 +71,6 @@ char *ft_strchr(char *str, char c)
 	return (NULL);
 }
 
-static char *ft_read_line(int fd, char *out, char *buffer)
-{
-	ssize_t len;
-	char *tmp;
-	
-	len = 1;
-	while (len != 0)
-	{
-		len = read(fd, out, BUFFER_SIZE);
-		if (len < 1)
-			return (NULL);
-		out[len] = 0;
-		if (!buffer)
-			buffer = ft_calloc(1, 1);
-		tmp = buffer;
-		buffer = ft_strjoin(buffer, out);
-		free(tmp);
-		tmp = NULL;
-		if(ft_strchr(buffer, '\n'))
-			break ;
-	}
-	return (buffer);
-}
-
 char *ft_substr(char *str, size_t start, size_t len)
 {
 	char *out;
@@ -113,25 +89,64 @@ char *ft_substr(char *str, size_t start, size_t len)
 	i = 0;
 	while (str[start] && i < len)
 		out[i++] = str[start++];
+	out[i] = 0;
 	return (out);
 }
 
-static char *get_line(char *buffer)
+static char *ft_read_line(int fd, char *out, char *buffer)
 {
-	char *out;
-	size_t count;
+	ssize_t len;
+	char *tmp;
+	
+	len = 1;
+	while (len != 0)
+	{
+		len = read(fd, out, BUFFER_SIZE);
+		if (len < 1)
+			break ;
+		out[len] = 0;
+		if (!buffer)
+			buffer = ft_calloc(1, 1);
+		tmp = buffer;
+		buffer = ft_strjoin(buffer, out);
+		free(tmp);
+		tmp = NULL;
+		if(ft_strchr(buffer, '\n'))
+			break ;
+	}
+	return (buffer);
+}
 
-	count = 0;
-	while (buffer[count] != '\n' && buffer[count] != '\0')
-		count++;
-	if (buffer[count] == '\0')
-		return (buffer);
-	out = ft_substr(buffer, count, ft_strlen(buffer) - count);
+char *get_line(char *buffer)
+{
+	size_t len;
+	char *out;
+
+	len = 0;
+	while (buffer[len] != '\n' && buffer[len] != '\0')
+		len++;
+	out = ft_substr(buffer, 0, len);
 	if (!out)
 		return (NULL);
-	free(buffer);
-	buffer = NULL;
 	return (out);
+}
+
+static char *get_buffer(char *buffer)
+{
+	char *tmp;
+	size_t len;
+
+	len = 0;
+	while (buffer[len] != '\n' && buffer[len] != '\0')
+		len++;
+	len++;
+	tmp = buffer;
+	buffer = ft_substr(buffer, len, ft_strlen(buffer) - len);
+	free(tmp);
+	tmp = NULL;
+	if (!buffer)
+		return (NULL);
+	return (buffer);
 }
 
 char *get_next_line(int fd)
@@ -145,24 +160,42 @@ char *get_next_line(int fd)
 	buf = ft_read_line(fd, out, buf);
 	if (!buf)
 		return (NULL);
-	free(out);
-	out = NULL;
-	buf = get_line(buf);
-	return (buf);
+	out = get_line(buf);
+	buf = get_buffer(buf);
+	return (out);
 }
 
 int main()
 {
 	char *filename = "file.txt";
+	static char *buffer;
+	char *out = (char *)malloc(BUFFER_SIZE + 1);
 	int fd = open(filename, O_RDONLY);
 	puts(get_next_line(fd));
 	puts(get_next_line(fd));
-	/* puts(ft_substr("hello world!", 5, 6)); */
-	/* puts(ft_substr("hello world!", 5, 7)); */
-	/* puts(ft_substr("hello world!", 5, 8)); */
+	/* puts(get_next_line(fd)); */
 
-	/* puts(ft_strjoin("hello ", "world!")); */
+	/* buffer = ft_read_line(fd, out, buffer); */
+	/* out = get_line(buffer); */
+	/* buffer = get_buffer(buffer); */
+	/* puts(out); */
+	/* /1* puts(buffer); *1/ */
 
+	/* buffer = ft_read_line(fd, out, buffer); */
+	/* out = get_line(buffer); */
+	/* buffer = get_buffer(buffer); */
+	/* puts(out); */
+	/* /1* puts(buffer); *1/ */
+
+	/* buffer = ft_read_line(fd, out, buffer); */
+	/* out = get_line(buffer); */
+	/* buffer = get_buffer(buffer); */
+	/* puts(out); */
+
+	/* buffer = ft_read_line(fd, out, buffer); */
+	/* out = get_line(buffer); */
+	/* buffer = get_buffer(buffer); */
+	/* puts(out); */
 
 	return (0);
 }
