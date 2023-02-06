@@ -12,6 +12,19 @@
 
 #include "get_next_line.h"
 
+static char *ft_buffree(char *buffer, char *out)
+{
+	char *tmp;
+	
+	tmp = buffer;
+	buffer = ft_strjoin(buffer, out);
+	if (!buffer)
+		return (NULL);
+	free(tmp);
+	tmp = NULL;
+	return (buffer);
+}
+
 static char	*ft_read_line(int fd, char *out, char *buffer)
 {
 	ssize_t	len;
@@ -26,12 +39,9 @@ static char	*ft_read_line(int fd, char *out, char *buffer)
 		out[len] = 0;
 		if (!buffer)
 			buffer = ft_calloc(1, 1);
-		tmp = buffer;
-		buffer = ft_strjoin(buffer, out);
+		buffer = ft_buffree(buffer, out);
 		if (!buffer)
 			return (NULL);
-		free(tmp);
-		tmp = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -70,20 +80,38 @@ static char	*get_buffer(char *buffer)
 	return (buffer);
 }
 
+/* char	*get_next_line(int fd) */
+/* { */
+/* 	static char	*buf; */
+/* 	char		*out; */
+
+/* 	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char)); */
+/* 	if (!out) */
+/* 		return (NULL); */
+/* 	buf = ft_read_line(fd, out, buf); */
+/* 	if (!buf) */
+/* 		return (NULL); */
+/* 	out = get_line(buf); */
+/* 	buf = get_buffer(buf); */
+/* 	if (!out || !buf) */
+/* 		return (NULL); */
+/* 	return (out); */
+/* } */
+
 char	*get_next_line(int fd)
 {
-	static char	*buf;
+	static char	*buf[4096];
 	char		*out;
 
 	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!out)
 		return (NULL);
-	buf = ft_read_line(fd, out, buf);
-	if (!buf)
+	buf[fd] = ft_read_line(fd, out, buf[fd]);
+	if (!buf[fd])
 		return (NULL);
-	out = get_line(buf);
-	buf = get_buffer(buf);
-	if (!out || !buf)
+	out = get_line(buf[fd]);
+	buf[fd] = get_buffer(buf[fd]);
+	if (!out || !buf[fd])
 		return (NULL);
 	return (out);
 }
