@@ -1,4 +1,4 @@
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 void ft_putptr(unsigned long long num)
 {
@@ -9,7 +9,7 @@ void ft_putptr(unsigned long long num)
 	}
 	else if (num < 10)
 		ft_printf_char(num + '0');
-	else if (num <= 16)
+	else if (num < 17)
 		ft_printf_char(num - 10 + 'a');
 }
 

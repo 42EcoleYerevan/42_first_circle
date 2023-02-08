@@ -1,9 +1,10 @@
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 int ft_printf_select(va_list arg, const char *s)
 {
 	int out;
 
+	out = 0;
 	if (*s == 'd' || *s == 'i')
 		out = ft_printf_digit(va_arg(arg, int));
 	else if (*s == 'c')
@@ -18,6 +19,8 @@ int ft_printf_select(va_list arg, const char *s)
 		out = ft_printf_hex(va_arg(arg, unsigned long long), *s);
 	else if (*s == '%')
 		out = ft_printf_char('%');
+	else
+		out = write(1, s - 1, 2);
 	return (out);
 }
 

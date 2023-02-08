@@ -13,9 +13,8 @@ OBJS = ft_printf_char.o\
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJS) test.c
+$(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
-	cc test.c libftprintf.a libft.a
 
 all: $(NAME)
 
