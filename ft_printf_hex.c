@@ -19,7 +19,7 @@ void ft_printf_puthex(unsigned int n, int c)
 {
 	if (n < 10)
 		ft_printf_char(n + '0');
-	else if (n < 17)
+	else if (n < 16)
 	{
 		if (c == 'x')
 			ft_printf_char(n - 10 + 'a');

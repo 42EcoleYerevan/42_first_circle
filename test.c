@@ -23,7 +23,8 @@ int main()
 	/* if (orig_null == mine_null) */
 	/* 	printf("ok!\n"); */
 
-	ft_printf("hello world%p", 16);
+	int i = ft_printf("%p\n", NULL);
+	printf("%p\n", NULL);
 
 
 	return (0);

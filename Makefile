@@ -9,11 +9,12 @@ OBJS = ft_printf_char.o\
 	   ft_printf_unsigned.o\
 	   ft_printf_hex.o\
 	   ft_printf.o
+HEADER = ft_printf.h
 
-%.o: %.c
+%.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(HEADER)
 	$(AR) $(NAME) $(OBJS)
 
 all: $(NAME)
@@ -21,7 +22,7 @@ all: $(NAME)
 clean: $(OBJS)
 	rm -rf $(OBJS)
 
-fclean: $(NAME)
+fclean: clean $(NAME)
 	rm -rf $(NAME)
 
 re: clean fclean all

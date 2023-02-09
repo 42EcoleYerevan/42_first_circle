@@ -1,15 +1,16 @@
 #include "ft_printf.h"
+#include <unistd.h>
 
 void ft_putptr(unsigned long long num)
 {
-	if (num > 16)
+	if (num >= 16)
 	{
 		ft_putptr(num / 16);
 		ft_putptr(num % 16);
 	}
 	else if (num < 10)
 		ft_printf_char(num + '0');
-	else if (num < 17)
+	else 
 		ft_printf_char(num - 10 + 'a');
 }
 
@@ -32,7 +33,7 @@ int ft_printf_pointer(unsigned long long num)
 
 	out = 0;
 	if (num == 0)
-		return (write(1, "(nil)", 5));
+		return (write(1, "0x0", 3));
 	else
 	{
 		out += write(1, "0x", 2);
