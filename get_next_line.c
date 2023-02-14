@@ -12,44 +12,44 @@
 
 #include "get_next_line.h"
 
-char	*ft_strchr(char *str, char c)
+char *bufferjoin(char *buffer, char *str)
 {
-	if (!str)
-		return (NULL);
-	while (*str)
-	{
-		if (*str == c)
-			return (str);
-		str++;
-	}
-	if (*str == c)
-		return (str);
-	return (NULL);
+	char *tmp;
+
+	if (!buffer)
+		buffer = (char *)ft_calloc(1, 1);
+	tmp = buffer;
+	buffer = ft_strjoin(buffer, str);
+	free(tmp);
+	tmp = NULL;
+	return (buffer);
 }
 
-static char	*ft_read_line(int fd, char *out, char *buffer)
+char	*read_line(int fd, char *buffer)
 {
 	ssize_t	len;
-	char	*tmp;
+	char *out;
 
+	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!out)
+		return (NULL);
 	len = 1;
-	while (len != 0)
+	while (len > 0)
 	{
 		len = read(fd, out, BUFFER_SIZE);
-		if (len < 1)
-			break ;
+		if (len < 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
 		out[len] = 0;
-		if (!buffer)
-			buffer = ft_calloc(1, 1);
-		tmp = buffer;
-		buffer = ft_strjoin(buffer, out);
-		free(tmp);
-		tmp = NULL;
+		buffer = bufferjoin(buffer, out);
 		if (!buffer)
 			return (NULL);
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
+	free(out);
 	return (buffer);
 }
 
@@ -61,13 +61,14 @@ char	*get_line(char *buffer)
 	len = 0;
 	while (buffer[len] != '\n' && buffer[len] != '\0')
 		len++;
+	len++;
 	out = ft_substr(buffer, 0, len);
 	if (!out)
 		return (NULL);
 	return (out);
 }
 
-static char	*get_buffer(char *buffer)
+char	*rebuffer(char *buffer)
 {
 	char	*tmp;
 	size_t	len;
@@ -78,27 +79,28 @@ static char	*get_buffer(char *buffer)
 	len++;
 	tmp = buffer;
 	buffer = ft_substr(buffer, len, ft_strlen(buffer) - len);
-	if (!buffer)
-		return (NULL);
 	free(tmp);
 	tmp = NULL;
+	if (!buffer)
+		return (NULL);
 	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*buf;
-	char		*out;
+	char *out;
 
-	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!out)
+	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
-	buf = ft_read_line(fd, out, buf);
+	buf = read_line(fd, buf);
 	if (!buf)
 		return (NULL);
 	out = get_line(buf);
-	buf = get_buffer(buf);
-	if (!out || !buf)
+	if (!out)
+		return (NULL);
+	buf = rebuffer(buf);
+	if (!buf)
 		return (NULL);
 	return (out);
 }
