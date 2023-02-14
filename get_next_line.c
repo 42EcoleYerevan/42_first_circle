@@ -34,20 +34,18 @@ char	*read_line(int fd, char *buffer)
 	if (!out)
 		return (NULL);
 	len = 1;
-	while (len > 0)
+	while (len > 0 && !ft_strchr(buffer, '\n'))
 	{
 		len = read(fd, out, BUFFER_SIZE);
-		if (len < 0)
+		if (len < 1)
 		{
-			free(buffer);
+			free(out);
 			return (NULL);
 		}
 		out[len] = 0;
 		buffer = bufferjoin(buffer, out);
 		if (!buffer)
 			return (NULL);
-		if (ft_strchr(buffer, '\n'))
-			break ;
 	}
 	free(out);
 	return (buffer);
@@ -61,10 +59,9 @@ char	*get_line(char *buffer)
 	len = 0;
 	while (buffer[len] != '\n' && buffer[len] != '\0')
 		len++;
-	len++;
-	out = ft_substr(buffer, 0, len);
-	if (!out)
-		return (NULL);
+	if (buffer[len] == '\0')
+		return (ft_substr(buffer, 0, len));
+	out = ft_substr(buffer, 0, ++len);
 	return (out);
 }
 
