@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 char *bufferjoin(char *buffer, char *str)
 {
@@ -34,18 +35,20 @@ char	*read_line(int fd, char *buffer)
 	if (!out)
 		return (NULL);
 	len = 1;
-	while (len > 0 && !ft_strchr(buffer, '\n'))
+	while (len > 0)
 	{
 		len = read(fd, out, BUFFER_SIZE);
-		if (len < 1)
+		if (ft_strlen(buffer) == 0 && len == 0)
+			return (NULL);
+		if (len < 0)
 		{
 			free(out);
 			return (NULL);
 		}
 		out[len] = 0;
 		buffer = bufferjoin(buffer, out);
-		if (!buffer)
-			return (NULL);
+		if (ft_strchr(buffer, '\n'))
+			break ;
 	}
 	free(out);
 	return (buffer);
@@ -54,15 +57,13 @@ char	*read_line(int fd, char *buffer)
 char	*get_line(char *buffer)
 {
 	size_t	len;
-	char	*out;
 
 	len = 0;
 	while (buffer[len] != '\n' && buffer[len] != '\0')
 		len++;
 	if (buffer[len] == '\0')
 		return (ft_substr(buffer, 0, len));
-	out = ft_substr(buffer, 0, ++len);
-	return (out);
+	return (ft_substr(buffer, 0, ++len));
 }
 
 char	*rebuffer(char *buffer)
@@ -90,12 +91,15 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
+	/* puts("read_line"); */
 	buf = read_line(fd, buf);
 	if (!buf)
 		return (NULL);
+	/* puts("get_line"); */
 	out = get_line(buf);
 	if (!out)
 		return (NULL);
+	/* puts("rebuffer"); */
 	buf = rebuffer(buf);
 	if (!buf)
 		return (NULL);

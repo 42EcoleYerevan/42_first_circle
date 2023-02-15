@@ -28,8 +28,7 @@ size_t	ft_strlen(char *str);
 char	*ft_strcat(char *dst, char *src);
 char	*ft_strjoin(char *str1, char *str2);
 char	*ft_strchr(char *str, char c);
-char	*ft_substr(const char *s, size_t start, size_t len);
-char	*ft_substr(char const *s, size_t start, size_t len);
+char	*ft_substr(char *s, size_t start, size_t len);
 char	*get_next_line(int fd);
 
 #endif

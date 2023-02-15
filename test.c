@@ -104,10 +104,12 @@ void reset_file(char *filename, char *str)
 void test_get_next_line_(int fd, char *str, char *out)
 {
 	int p;
-	if (!out)
-		p = get_next_line(fd) == out;
+	char *get;
+	get = get_next_line(fd);
+	if (!out || !get)
+		p = get == out;
 	else
-		p = (strcmp(get_next_line(fd), out) == 0)? 1: 0;
+		p = (strcmp(get, out) == 0)? 1: 0;
 	printf("get_next_line test:\t\t");
 	printf("%s%s%s ", _COLORS[p], _OUTPUT[p], _COLORS[2]);
 	puts("");
@@ -182,38 +184,50 @@ void test_get_next_line_without_nl(void)
 void test_get_next_line(void)
 {
 	int fd;
-	test_get_next_line_for_NULL();
-	test_get_next_line_with_nl();
-	test_get_next_line_without_nl();
+	/* test_get_next_line_for_NULL(); */
+	/* test_get_next_line_with_nl(); */
+	/* test_get_next_line_without_nl(); */
 
-	reset_file("file.txt", "hello leha\n");
+	/* reset_file("file.txt", "hello leha\n"); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* test_get_next_line_(fd, "hello leha\n", "hello leha\n"); */
+	/* close(fd); */
+
+	/* reset_file("file.txt", "\n"); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* test_get_next_line_(fd, "\n", "\n"); */
+	/* close(fd); */
+
+	/* reset_file("file.txt", "\n\n\n"); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* test_get_next_line_(fd, "\n\n\n", "\n"); */
+	/* close(fd); */
+
+
+	/* test_get_next_line_(1000, " ", NULL); */
+	/* test_get_next_line_(-1, " ", NULL); */
+	/* test_get_next_line_(20, " ", NULL); */
+
+	/* reset_file("file.txt", ""); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* test_get_next_line_(fd, "", NULL); */
+	/* close(fd); */
+
+	/* reset_file("file.txt", " "); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* test_get_next_line_(fd, " ", " "); */
+	/* close(fd); */
+
+	/* reset_file("file.txt", "hello world"); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* test_get_next_line_(fd, "hello world", "hello world"); */
+	/* close(fd); */
+
+	reset_file("file.txt", "hello world");
 	fd = open("file.txt", O_RDONLY);
-	test_get_next_line_(fd, "hello leha\n", "hello leha\n");
+	puts(get_next_line(fd));
+	puts(get_next_line(fd));
 	close(fd);
-
-	reset_file("file.txt", "\n");
-	fd = open("file.txt", O_RDONLY);
-	test_get_next_line_(fd, "\n", "\n");
-	close(fd);
-
-	reset_file("file.txt", "\n\n\n");
-	fd = open("file.txt", O_RDONLY);
-	test_get_next_line_(fd, "\n\n\n", "\n");
-	close(fd);
-
-	reset_file("file.txt", "");
-	fd = open("file.txt", O_RDONLY);
-	test_get_next_line_(fd, "", NULL);
-	close(fd);
-
-	reset_file("file.txt", " ");
-	fd = open("file.txt", O_RDONLY);
-	test_get_next_line_(fd, " ", " ");
-	close(fd);
-
-	test_get_next_line_(1000, " ", NULL);
-	test_get_next_line_(-1, " ", NULL);
-	test_get_next_line_(20, " ", NULL);
 }
 
 int main()

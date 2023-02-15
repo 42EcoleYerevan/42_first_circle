@@ -46,6 +46,8 @@ size_t	ft_strlen(char *str)
 	int	len;
 
 	len = 0;
+	if (!str)
+		return (0);
 	while (*str)
 	{
 		len++;
@@ -71,7 +73,7 @@ char	*ft_strjoin(char *str1, char *str2)
 	return (out);
 }
 
-char	*ft_substr(const char *s, size_t start, size_t len)
+char	*ft_substr(char *s, size_t start, size_t len)
 {
 	char	*out;
 	size_t	i;
