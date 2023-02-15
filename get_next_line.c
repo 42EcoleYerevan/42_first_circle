@@ -32,15 +32,11 @@ char	*read_line(int fd, char *buffer)
 	char *out;
 
 	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!out)
-		return (NULL);
 	len = 1;
 	while (len > 0)
 	{
 		len = read(fd, out, BUFFER_SIZE);
-		if (ft_strlen(buffer) == 0 && len == 0)
-			return (NULL);
-		if (len < 0)
+		if ((ft_strlen(buffer) == 0 && len == 0) || len < 0)
 		{
 			free(out);
 			return (NULL);
@@ -74,13 +70,12 @@ char	*rebuffer(char *buffer)
 	len = 0;
 	while (buffer[len] != '\n' && buffer[len] != '\0')
 		len++;
-	len++;
+	if (buffer[len] == '\n')
+		len++;
 	tmp = buffer;
 	buffer = ft_substr(buffer, len, ft_strlen(buffer) - len);
 	free(tmp);
 	tmp = NULL;
-	if (!buffer)
-		return (NULL);
 	return (buffer);
 }
 
@@ -91,17 +86,15 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
-	/* puts("read_line"); */
 	buf = read_line(fd, buf);
 	if (!buf)
 		return (NULL);
-	/* puts("get_line"); */
 	out = get_line(buf);
-	if (!out)
-		return (NULL);
-	/* puts("rebuffer"); */
 	buf = rebuffer(buf);
 	if (!buf)
+	{
+		free(out);
 		return (NULL);
+	}
 	return (out);
 }

@@ -101,19 +101,28 @@ void reset_file(char *filename, char *str)
 	close(fd);
 }
 
-void test_get_next_line_(int fd, char *str, char *out)
+int check_get_next_line_output(char *gnl_output, char *expected)
 {
-	int p;
+	int out;
+	if (!gnl_output || !expected)
+		out = gnl_output == expected;
+	else
+		out = (strcmp(gnl_output, expected) == 0)? 1: 0;
+	return (out);
+}
+
+void test_get_next_line_(int fd, char *expected)
+{
+	int gnl_output[2];
 	char *get;
 	get = get_next_line(fd);
-	if (!out || !get)
-		p = get == out;
-	else
-		p = (strcmp(get, out) == 0)? 1: 0;
+	gnl_output[0] = check_get_next_line_output(get,  expected);
+	get = get_next_line(fd);
+	gnl_output[1] = check_get_next_line_output(get,  NULL);
 	printf("get_next_line test:\t\t");
-	printf("%s%s%s ", _COLORS[p], _OUTPUT[p], _COLORS[2]);
+	printf("%s%s%s ", _COLORS[gnl_output[0]], _OUTPUT[gnl_output[0]], _COLORS[2]);
+	printf("%s%s%s ", _COLORS[gnl_output[1]], _OUTPUT[gnl_output[1]], _COLORS[2]);
 	puts("");
-	close(fd);
 }
 
 void test_get_next_line_for_NULL(void)
@@ -190,44 +199,39 @@ void test_get_next_line(void)
 
 	/* reset_file("file.txt", "hello leha\n"); */
 	/* fd = open("file.txt", O_RDONLY); */
-	/* test_get_next_line_(fd, "hello leha\n", "hello leha\n"); */
+	/* test_get_next_line_(fd, "hello leha\n"); */
 	/* close(fd); */
 
 	/* reset_file("file.txt", "\n"); */
 	/* fd = open("file.txt", O_RDONLY); */
-	/* test_get_next_line_(fd, "\n", "\n"); */
+	/* test_get_next_line_(fd, "\n"); */
 	/* close(fd); */
 
-	/* reset_file("file.txt", "\n\n\n"); */
-	/* fd = open("file.txt", O_RDONLY); */
-	/* test_get_next_line_(fd, "\n\n\n", "\n"); */
-	/* close(fd); */
-
-
-	/* test_get_next_line_(1000, " ", NULL); */
-	/* test_get_next_line_(-1, " ", NULL); */
-	/* test_get_next_line_(20, " ", NULL); */
+	/* test_get_next_line_(1000, NULL); */
+	/* test_get_next_line_(-1, NULL); */
+	/* test_get_next_line_(20, NULL); */
 
 	/* reset_file("file.txt", ""); */
 	/* fd = open("file.txt", O_RDONLY); */
-	/* test_get_next_line_(fd, "", NULL); */
+	/* test_get_next_line_(fd, NULL); */
 	/* close(fd); */
 
-	/* reset_file("file.txt", " "); */
-	/* fd = open("file.txt", O_RDONLY); */
-	/* test_get_next_line_(fd, " ", " "); */
-	/* close(fd); */
-
-	/* reset_file("file.txt", "hello world"); */
-	/* fd = open("file.txt", O_RDONLY); */
-	/* test_get_next_line_(fd, "hello world", "hello world"); */
-	/* close(fd); */
+	reset_file("file.txt", " ");
+	fd = open("file.txt", O_RDONLY);
+	test_get_next_line_(fd, " ");
+	close(fd);
 
 	reset_file("file.txt", "hello world");
 	fd = open("file.txt", O_RDONLY);
-	puts(get_next_line(fd));
-	puts(get_next_line(fd));
+	test_get_next_line_(fd, "hello world");
 	close(fd);
+
+	/* reset_file("file.txt", "hello world"); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* puts(get_next_line(fd)); */
+	/* puts(get_next_line(fd)); */
+	/* close(fd); */
+
 }
 
 int main()
@@ -236,9 +240,13 @@ int main()
 	/* test_strjoin(); */
 	/* test_substr(); */
 	test_get_next_line();
-	/* char *arr[1] = {"hello"} */
-	/* int fd = open("file.txt", O_RDONLY); */
-	
+	/* char *buffer; */
+	/* int fd; */
+	/* reset_file("file.txt", " "); */
+	/* fd = open("file.txt", O_RDONLY); */
+	/* printf("%d\n", *get_next_line(fd)); */
+	/* close(fd); */
+
 	
 	return (0);
 }
