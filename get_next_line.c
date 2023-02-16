@@ -50,33 +50,24 @@ char	*read_line(int fd, char *buffer)
 	return (buffer);
 }
 
-char	*get_line(char *buffer)
-{
-	size_t	len;
-
-	len = 0;
-	while (buffer[len] != '\n' && buffer[len] != '\0')
-		len++;
-	if (buffer[len] == '\0')
-		return (ft_substr(buffer, 0, len));
-	return (ft_substr(buffer, 0, ++len));
-}
-
-char	*rebuffer(char *buffer)
+char	*rebuffer(char **buffer)
 {
 	char	*tmp;
+	char 	*out;
+	char 	*line;
 	size_t	len;
 
 	len = 0;
-	while (buffer[len] != '\n' && buffer[len] != '\0')
+	out = (char *)*buffer;
+	while (out[len] != '\n' && out[len] != '\0')
 		len++;
-	if (buffer[len] == '\n')
+	if (out[len] == '\n')
 		len++;
-	tmp = buffer;
-	buffer = ft_substr(buffer, len, ft_strlen(buffer) - len);
+	tmp = out;
+	line = ft_substr(out, 0, len);
+	*buffer = ft_substr(out, len, ft_strlen(out) - len);
 	free(tmp);
-	tmp = NULL;
-	return (buffer);
+	return (line);
 }
 
 char	*get_next_line(int fd)
@@ -89,8 +80,7 @@ char	*get_next_line(int fd)
 	buf = read_line(fd, buf);
 	if (!buf)
 		return (NULL);
-	out = get_line(buf);
-	buf = rebuffer(buf);
+	out = rebuffer(&buf);
 	if (!buf)
 	{
 		free(out);
