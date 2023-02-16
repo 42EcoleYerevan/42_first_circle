@@ -30,12 +30,14 @@ char	*read_line(int fd, char *buffer)
 {
 	ssize_t	len;
 	char *out;
+	int buffersize;
 
-	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	buffersize = (BUFFER_SIZE == 1)? 100: BUFFER_SIZE;
+	out = (char *)malloc((buffersize + 1) * sizeof(char));
 	len = 1;
 	while (len > 0)
 	{
-		len = read(fd, out, BUFFER_SIZE);
+		len = read(fd, out, buffersize);
 		if ((ft_strlen(buffer) == 0 && len == 0) || len < 0)
 		{
 			free(out);
