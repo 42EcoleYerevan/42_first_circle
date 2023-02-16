@@ -6,11 +6,28 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 16:50:55 by agladkov          #+#    #+#             */
-/*   Updated: 2023/02/07 18:17:31 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/02/07 18:17:25 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stddef.h>
+#include <stdlib.h>
+
+char	*ft_strchr(char *str, char c)
+{
+	if (!str)
+		return (NULL);
+	while (*str)
+	{
+		if (*str == c)
+			return (str);
+		str++;
+	}
+	if (*str == c)
+		return (str);
+	return (NULL);
+}
 
 char	*ft_calloc(size_t count, size_t size)
 {
@@ -29,6 +46,8 @@ size_t	ft_strlen(char *str)
 	int	len;
 
 	len = 0;
+	if (!str)
+		return (0);
 	while (*str)
 	{
 		len++;
@@ -37,50 +56,44 @@ size_t	ft_strlen(char *str)
 	return (len);
 }
 
-char	*ft_strcat(char *dst, char *src)
-{
-	if (!dst || !src)
-		return (NULL);
-	if (src == dst)
-		return (dst);
-	while (*dst)
-		dst++;
-	while (*src)
-		*dst++ = *src++;
-	*dst = 0;
-	return (dst);
-}
-
 char	*ft_strjoin(char *str1, char *str2)
 {
 	char	*out;
+	int 	i;
 
 	out = ft_calloc((ft_strlen(str1) + ft_strlen(str2) + 1), sizeof(char));
 	if (!out)
 		return (NULL);
-	ft_strcat(out, str1);
-	ft_strcat(out, str2);
+	i = 0;
+	while (*str1)
+		out[i++] = *str1++;
+	while (*str2)
+		out[i++] = *str2++;
+	out[i] = 0;
 	return (out);
 }
 
-char	*ft_substr(char *str, size_t start, size_t len)
+char	*ft_substr(char *s, size_t start, size_t len)
 {
 	char	*out;
 	size_t	i;
+	size_t	strlen;
 
-	if (len > ft_strlen(str) - start)
-	{
-		out = ft_calloc(1, sizeof(char));
-		if (!out)
-			return (NULL);
-		return (out);
-	}
-	out = (char *)malloc((len + 1) * sizeof(char));
+	strlen = ft_strlen((char *)s);
+	if (!s)
+		return (NULL);
+	if (start > strlen)
+		return ((char *)malloc(1 * sizeof(char)));
+	if (len > strlen - start)
+		len = strlen - start;
+	out = (char *) malloc((len + 1) * sizeof(*s));
 	if (!out)
 		return (NULL);
 	i = 0;
-	while (str[start] && i < len)
-		out[i++] = str[start++];
-	out[i] = 0;
+	while (i < len && s[start + i])
+	{
+		out[i] = s[start + i];
+		i++;
+	} out[i] = 0;
 	return (out);
 }
