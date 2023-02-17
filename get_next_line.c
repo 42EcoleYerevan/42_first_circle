@@ -87,14 +87,14 @@ char 	*rebuffer(char *buffer)
 char	*get_next_line(int fd)
 {
 	char *out;
-	static char	*buf;
+	static char	*buffer;
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
-	buf = read_line(fd, buf);
-	if (!buf)
+	buffer = read_line(fd, buffer);
+	if (!buffer)
 		return (NULL);
-	out = get_line(buf);
-	buf = rebuffer(buf);
+	out = get_line(buffer);
+	buffer = rebuffer(buffer);
 	return (out);
 }
