@@ -117,8 +117,10 @@ void test_get_next_line_(int fd, char *expected)
 	char *get;
 	get = get_next_line(fd);
 	gnl_output[0] = check_get_next_line_output(get,  expected);
+	free(get);
 	get = get_next_line(fd);
 	gnl_output[1] = check_get_next_line_output(get,  NULL);
+	free(get);
 	printf("get_next_line test:\t\t");
 	printf("%s%s%s ", _COLORS[gnl_output[0]], _OUTPUT[gnl_output[0]], _COLORS[2]);
 	printf("%s%s%s ", _COLORS[gnl_output[1]], _OUTPUT[gnl_output[1]], _COLORS[2]);
@@ -233,20 +235,22 @@ int main()
 	/* test_substr(); */
 	test_get_next_line();
 
-	/* int fd; */
-	/* reset_file("file.txt", "hello world"); */
-	/* fd = open("file.txt", O_RDONLY); */
+	/* reset_file("file.txt", "\n"); */
+	/* int fd = open("file.txt", O_RDONLY); */
 	/* char *str = get_next_line(fd); */
+	/* /1* static char *buffer; *1/ */
+	/* /1* buffer = read_line(fd, buffer); *1/ */
+	/* /1* char *line = rebuffer(&buffer); *1/ */
+
+	/* /1* char *strin = ft_calloc(10, sizeof(char)); *1/ */
+	/* /1* char *str = ft_substr(strin, 0, 0); *1/ */
+	/* /1* free(strin); *1/ */
+	/* /1* free(str); *1/ */
+
+	/* free(str); */
+	/* /1* free(line); *1/ */
+	/* /1* free(buffer); *1/ */
 	/* close(fd); */
-	/* free(str); */
-
-	/* char *str = ft_substr("hello world", 5, ft_strlen("hello world") - 5); */
-	/* free(str); */
-
-	/* static char *buffer; */
-	/* buffer = ft_substr("hello world leha brat",0 ,5); */
-	/* char *line = rebuffer(&buffer); */
-	/* free(line); */
 	
 	return (0);
 }

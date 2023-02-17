@@ -86,7 +86,7 @@ char	*ft_substr(char *s, size_t start, size_t len)
 		return ((char *)malloc(1 * sizeof(char)));
 	if (len > strlen - start)
 		len = strlen - start;
-	out = (char *) malloc((len + 1) * sizeof(*s));
+	out = (char *) malloc((len + 1) * sizeof(char));
 	if (!out)
 		return (NULL);
 	i = 0;
@@ -94,6 +94,7 @@ char	*ft_substr(char *s, size_t start, size_t len)
 	{
 		out[i] = s[start + i];
 		i++;
-	} out[i] = 0;
+	}
+	out[i] = 0;
 	return (out);
 }
