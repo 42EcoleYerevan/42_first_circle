@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 16:47:38 by agladkov          #+#    #+#             */
-/*   Updated: 2023/02/07 20:20:31 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/02/18 13:12:28 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char	*read_line(int fd, char *buffer)
 		if ((ft_strlen(buffer) == 0 && len == 0) || len < 0)
 		{
 			free(out);
+			free(buffer);
 			return (NULL);
 		}
 		out[len] = 0;

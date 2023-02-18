@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 16:47:38 by agladkov          #+#    #+#             */
-/*   Updated: 2023/02/07 20:20:31 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/02/18 13:21:58 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,16 @@ char	*read_line(int fd, char *buffer)
 {
 	ssize_t	len;
 	char *out;
-	int buffersize;
 
-	buffersize = (BUFFER_SIZE == 1)? 100: BUFFER_SIZE;
-	out = (char *)malloc((buffersize + 1) * sizeof(char));
+	out = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	len = 1;
 	while (len > 0)
 	{
-		len = read(fd, out, buffersize);
+		len = read(fd, out, BUFFER_SIZE);
 		if ((ft_strlen(buffer) == 0 && len == 0) || len < 0)
 		{
 			free(out);
+			free(buffer);
 			return (NULL);
 		}
 		out[len] = 0;
@@ -52,41 +51,51 @@ char	*read_line(int fd, char *buffer)
 	return (buffer);
 }
 
-char	*rebuffer(char **buffer)
+char	*get_line(char *buffer)
 {
-	char	*tmp;
-	char 	*out;
 	char 	*line;
 	size_t	len;
 
 	len = 0;
-	out = (char *)*buffer;
-	while (out[len] != '\n' && out[len] != '\0')
+	while (buffer[len] != '\n' && buffer[len] != '\0')
 		len++;
-	if (out[len] == '\n')
+	if (buffer[len] == '\n')
 		len++;
-	tmp = out;
-	line = ft_substr(out, 0, len);
-	*buffer = ft_substr(out, len, ft_strlen(out) - len);
-	free(tmp);
+	line = ft_substr(buffer, 0, len);
 	return (line);
+}
+
+char 	*rebuffer(char *buffer)
+{
+	char	*tmp;
+	size_t	len;
+
+	len = 0;
+	while (buffer[len] != '\n' && buffer[len] != '\0')
+		len++;
+	if (buffer[len] == '\0')
+	{
+		free(buffer);
+		return (NULL);
+	}
+	if (buffer[len] == '\n')
+		len++;
+	tmp = ft_substr(buffer, len, ft_strlen(buffer) - len);
+	free(buffer);
+	return (tmp);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buf[4096];
 	char *out;
+	static char	*buffer[4096];
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
-	buf[fd] = read_line(fd, buf[fd]);
-	if (!buf[fd])
+	buffer[fd] = read_line(fd, buffer[fd]);
+	if (!buffer[fd])
 		return (NULL);
-	out = rebuffer(&buf[fd]);
-	if (!buf[fd])
-	{
-		free(out);
-		return (NULL);
-	}
+	out = get_line(buffer[fd]);
+	buffer[fd] = rebuffer(buffer[fd]);
 	return (out);
 }
